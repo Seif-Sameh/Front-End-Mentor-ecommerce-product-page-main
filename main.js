@@ -49,7 +49,7 @@ cartIcon.addEventListener("click", () => {
 })
 
 function renderCart() {
-    if (cartItemsNo === 0) {
+    if (cartItemsNo === 0 || cartItemsNo === null) {
         document.querySelector(".itemsNo").style.display = "none";
         document.querySelector(".cart .empty-cart").style.display = "flex";
         document.querySelector(".cart .cart-product").style.display = "none";

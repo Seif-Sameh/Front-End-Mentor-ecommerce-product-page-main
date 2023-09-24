@@ -14,6 +14,7 @@ let itemsNoDispaly = document.querySelector(".main-content .counter span");
 let addToCartBtn = document.querySelector(".add-to-cart");
 
 // Function calls
+getFromLocalStorage();
 renderCart();
 renderImages(allImages, mainImage);
 
@@ -61,8 +62,19 @@ function renderCart() {
         document.querySelector(".cart .cart-product").style.display = "flex";
         document.querySelector(".cart .checkout-button").style.display = "block";
         document.querySelector(".cart .items-number").textContent = cartItemsNo;
-        document.querySelector(".cart .total-price").textContent =  `$${125.00 * cartItemsNo}`
+        document.querySelector(".cart .total-price").textContent = `$${125.00 * cartItemsNo}`
     }
+}
+
+// Handel local Storage
+function addToLocalStorage() {
+    let noOfItems = JSON.stringify(cartItemsNo);
+    localStorage.setItem("Cart Items No", noOfItems);
+}
+function getFromLocalStorage() {
+    let noOfItems = JSON.parse(localStorage.getItem("Cart Items No"));
+    cartItemsNo = noOfItems;
+    renderCart();
 }
 
 // Cart Delete Button
@@ -70,64 +82,63 @@ let cartDeleteBtn = document.querySelector(".cart .cart-product .delete-icon");
 cartDeleteBtn.addEventListener("click", () => {
     cartItemsNo = 0;
     renderCart();
+    addToLocalStorage();
 })
 
 // Counter Button
 let noToAdd = 0;
 plus.addEventListener("click", () => {
-    noToAdd++; 
+    noToAdd++;
     itemsNoDispaly.textContent = noToAdd;
 })
 minus.addEventListener("click", () => {
-    if(noToAdd -1 >= 0) noToAdd--; 
-    itemsNoDispaly.textContent = noToAdd; 
+    if (noToAdd - 1 >= 0) noToAdd--;
+    itemsNoDispaly.textContent = noToAdd;
 })
 
 // Add to cart button
-addToCartBtn.addEventListener("click", ()=> {
+addToCartBtn.addEventListener("click", () => {
     cartItemsNo += noToAdd;
     renderCart();
+    addToLocalStorage();
     itemsNoDispaly.textContent = 0;
     noToAdd = 0;
 })
 
 
-
-
-
 // Render images -arrow
 leftArrow.addEventListener("click", () => {
-    if(checkBoundries("left")){
-        mainImage.setAttribute("src", `${allImages[currentImg].getAttribute("src")}`.replace("-thumbnail", "")) ;
+    if (checkBoundries("left")) {
+        mainImage.setAttribute("src", `${allImages[currentImg].getAttribute("src")}`.replace("-thumbnail", ""));
     }
 })
 
 rightArrow.addEventListener("click", () => {
-    if(checkBoundries("right")){
-        mainImage.setAttribute("src", `${allImages[currentImg].getAttribute("src")}`.replace("-thumbnail", "")) ;
+    if (checkBoundries("right")) {
+        mainImage.setAttribute("src", `${allImages[currentImg].getAttribute("src")}`.replace("-thumbnail", ""));
     }
 })
 
-function checkBoundries(direction){
-    if(direction === "left" && currentImg - 1 >= 0){
+function checkBoundries(direction) {
+    if (direction === "left" && currentImg - 1 >= 0) {
         currentImg--;
         return true;
     }
-    else if(direction ==="right" && currentImg + 1 < allImages.length){
+    else if (direction === "right" && currentImg + 1 < allImages.length) {
         currentImg++;
         return true
     }
-    else{
+    else {
         return false;
     }
 }
 
 // Full images
-if(window.innerWidth > 375){
+if (window.innerWidth > 375) {
     mainImage.addEventListener("click", fullScreenPreview)
 }
 
-function fullScreenPreview(){
+function fullScreenPreview() {
     let fullScreenDiv = document.querySelector(".images-section").cloneNode(true);
     fullScreenDiv.style.cssText = "width: fit-content; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200;";
     fullScreenDiv.classList.add("full-screen");
@@ -145,28 +156,28 @@ function fullScreenPreview(){
     let rightArrow = document.querySelector(".right-arrow").cloneNode(true);
     leftArrow.style.cssText = "width: 15px; background-color: white; padding: 15px; border-radius: 50px; position: absolute; top: 40%; transform: translateY(-50%); left: -20px; cursor: pointer;";
     rightArrow.style.cssText = "width: 15px; background-color: white; padding: 15px; border-radius: 50px; position: absolute; top: 40%; transform: translateY(-50%); right: -20px; cursor: pointer;";
-    
+
     let img = document.querySelector(".full-screen .main-image img");
     let imgs = Array.from(document.querySelectorAll(".full-screen .other-images img"));
 
-    imgs.forEach(()=>{renderImages(imgs, img)})
-    
+    imgs.forEach(() => { renderImages(imgs, img) })
+
     leftArrow.addEventListener("click", () => {
-        if(checkBoundries("left")){
-            img.setAttribute("src", `${imgs[currentImg].getAttribute("src")}`.replace("-thumbnail", "")) ;
-            imgs.forEach((e) => {e.classList.remove("active");});
+        if (checkBoundries("left")) {
+            img.setAttribute("src", `${imgs[currentImg].getAttribute("src")}`.replace("-thumbnail", ""));
+            imgs.forEach((e) => { e.classList.remove("active"); });
             imgs[currentImg].classList.add("active");
         }
     })
-    
+
     rightArrow.addEventListener("click", () => {
-        if(checkBoundries("right")){
-            img.setAttribute("src", `${imgs[currentImg].getAttribute("src")}`.replace("-thumbnail", "")) ;
-            imgs.forEach((e) => {e.classList.remove("active");});
+        if (checkBoundries("right")) {
+            img.setAttribute("src", `${imgs[currentImg].getAttribute("src")}`.replace("-thumbnail", ""));
+            imgs.forEach((e) => { e.classList.remove("active"); });
             imgs[currentImg].classList.add("active");
         }
     })
-    
+
     leftArrow.addEventListener("mousedown", () => {
         leftArrow.querySelector("path").setAttribute("stroke", "hsl(26, 100%, 55%)");
     })
@@ -189,12 +200,12 @@ function fullScreenPreview(){
 
 
 // Render Selected image -main
-function renderImages(images, mainImage){
+function renderImages(images, mainImage) {
     images.forEach((e) => {
-        e.addEventListener("click", ()=>{
-            images.forEach((e) => {e.classList.remove("active");});
+        e.addEventListener("click", () => {
+            images.forEach((e) => { e.classList.remove("active"); });
             e.classList.add("active");
-            mainImage.setAttribute("src" , `${e.getAttribute("src")}`.replace("-thumbnail", ""));
+            mainImage.setAttribute("src", `${e.getAttribute("src")}`.replace("-thumbnail", ""));
             currentImg = images.indexOf(e);
         })
     })

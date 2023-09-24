@@ -48,8 +48,9 @@ cartIcon.addEventListener("click", () => {
     };
 })
 
+
 function renderCart() {
-    if (cartItemsNo === 0 || cartItemsNo === null) {
+    if (cartItemsNo === 0 || localStorage.length === 0) {
         document.querySelector(".itemsNo").style.display = "none";
         document.querySelector(".cart .empty-cart").style.display = "flex";
         document.querySelector(".cart .cart-product").style.display = "none";
@@ -74,8 +75,8 @@ function addToLocalStorage() {
 function getFromLocalStorage() {
     let noOfItems = JSON.parse(localStorage.getItem("Cart Items No"));
     cartItemsNo = noOfItems;
-    renderCart();
 }
+
 
 // Cart Delete Button
 let cartDeleteBtn = document.querySelector(".cart .cart-product .delete-icon");
@@ -99,8 +100,8 @@ minus.addEventListener("click", () => {
 // Add to cart button
 addToCartBtn.addEventListener("click", () => {
     cartItemsNo += noToAdd;
-    renderCart();
     addToLocalStorage();
+    renderCart();
     itemsNoDispaly.textContent = 0;
     noToAdd = 0;
 })
